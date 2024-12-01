@@ -1,4 +1,5 @@
 import fileinput
+from collections import Counter
 
 left, right = [], []
 
@@ -15,3 +16,12 @@ for l, r in zip(left, right):
     total_distance += abs(r - l)
 
 print(f"Part 1: {total_distance}")
+
+counter = Counter(right)
+
+similarity_score = 0
+for l in left:
+    occurrences = counter.get(l, 0)
+    similarity_score += l * occurrences
+
+print(f"Part 2: {similarity_score}")
