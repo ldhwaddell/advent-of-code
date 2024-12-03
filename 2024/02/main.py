@@ -7,9 +7,7 @@ def validate(report: List[int]) -> bool:
     decreasing = all(i > j for i, j in zip(report, report[1:]))
     valid_diff = all(1 <= abs(i - j) <= 3 for i, j in zip(report, report[1:]))
 
-    if (increasing and valid_diff) or (decreasing and valid_diff):
-        return True
-    return False
+    return (increasing and valid_diff) or (decreasing and valid_diff)
 
 
 safe_report_part_1 = 0
