@@ -12,8 +12,9 @@ def validate(report: List[int]) -> bool:
 
 safe_report_part_1 = 0
 safe_report_part_2 = 0
+
 for line in fileinput.input():
-    report = [int(n) for n in line.split()]
+    report = list(map(int, line.split()))
 
     if validate(report):
         safe_report_part_1 += 1
