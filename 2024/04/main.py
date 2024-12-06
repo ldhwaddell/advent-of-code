@@ -3,9 +3,7 @@ from typing import List
 
 
 def find_xmas(slice: List[str]) -> int:
-    if slice == ["X", "M", "A", "S"] or slice == ["S", "A", "M", "X"]:
-        return 1
-    return 0
+    return 1 if slice == ["X", "M", "A", "S"] or slice == ["S", "A", "M", "X"] else 0
 
 
 grid = []
@@ -41,8 +39,6 @@ for y in range(rows):
             ]
             count_1 += find_xmas(diag_slice)
 
-    print("\n\n")
-
 print(f"Part 1: {count_1}")
 
 
@@ -54,9 +50,6 @@ rows, cols = len(grid), len(grid[0])
 count_2 = 0
 for y in range(rows - 2):
     for x in range(cols - 2):
-        top = grid[y][x : x + 3]
-        mid = grid[y + 1][x : x + 3]
-        bottom = grid[y + 2][x : x + 3]
         left_diag = [grid[y][x], grid[y + 1][x + 1], grid[y + 2][x + 2]]
         right_diag = [grid[y][x + 2], grid[y + 1][x + 1], grid[y + 2][x]]
 
