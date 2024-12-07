@@ -52,8 +52,6 @@ def rotate(curr_direction):
             raise Exception("BAD")
 
 
-print(f"cols: {cols}, rows: {rows}")
-
 while True:
     # If we can advance, advance, and add current position to seen
     ncol, nrow = advance(col, row, curr_direction)
@@ -69,3 +67,40 @@ while True:
         col, row = ncol, nrow
 
 print(f"Part 1: {len(seen)}")
+
+
+# Find the starting position
+init_col, init_row = find_start()
+init_direction = "N"
+
+# Try placing a blocker in each position
+loops = 0
+for blocked_row in range(rows + 1):
+    for blocked_col in range(cols + 1):
+        # Reset seen, start col, start row, and direction each iteration.
+        col, row = init_col, init_row
+        curr_direction = init_direction
+        seen = set()
+
+        while True:
+            # If we can advance, advance, and add current position to seen
+            ncol, nrow = advance(col, row, curr_direction)
+            if ncol < 0 or ncol > cols or nrow < 0 or nrow > rows:
+                # We have reached edge
+                break
+
+            # Haven't reached edge. Check if hitting wall or theoretical wall
+            if grid[nrow][ncol] == "#" or (ncol, nrow) == (blocked_col, blocked_row):
+                curr_direction = rotate(curr_direction)
+                continue
+
+            # Check if we have crossed same spot in same direction before (if diff direction might not be loop yet)
+            if (ncol, nrow, curr_direction) in seen:
+                loops += 1
+                break
+
+            seen.add((ncol, nrow, curr_direction))
+            col, row = ncol, nrow
+
+
+print(f"Part 2: {loops}")
