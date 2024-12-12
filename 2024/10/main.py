@@ -42,3 +42,41 @@ for r in range(rows):
 
 
 print(f"Part 1: {part_1}")
+
+seen = {}
+
+
+def count_paths(r, c, target):
+    # Successfuly found path, increment
+    if target == 10:
+        return 1
+
+    # Check how many existing paths we have to a location
+    if (r, c, target) in seen:
+        return seen[(r, c, target)]
+
+    # Counter for total # of paths starting at current location
+    paths = 0
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    for dr, dc in directions:
+        nr, nc = r + dr, c + dc
+
+        if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == target:
+            # Increment by # of paths to the next target...
+            paths += count_paths(nr, nc, target + 1)
+
+    # Update the number of paths to the current position
+    seen[(r, c, target)] = paths
+
+    return paths
+
+
+part_2 = 0
+for r in range(rows):
+    for c in range(cols):
+        if grid[r][c] == 0:
+            # Add the # of results to part_1
+            part_2 += count_paths(r, c, 1)
+
+
+print(f"Part 2: {part_2}")
