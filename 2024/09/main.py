@@ -1,44 +1,30 @@
 import fileinput
 
-grid = []
 for line in fileinput.input():
-    row = list(map(int, [n for n in line.strip()]))
-    grid.append(row)
+    nums = list(map(int, [n for n in line.strip()]))
+    break
 
+# Generate dot map.
+disk = []
+curr_id = 0
+for i in range(len(nums)):
+    if i % 2 == 0:
+        disk.extend([curr_id] * nums[i])
+        curr_id += 1
+    else:
+        disk.extend(["."] * nums[i])
 
-rows, cols = len(grid), len(grid[0])
+# Execute the swap
+l, r = 0, len(disk) - 1
 
+while l != r:
+    if disk[l] != ".":
+        l += 1
+    elif disk[r] == ".":
+        r -= 1
+    else:
+        disk[l], disk[r] = disk[r], disk[l]
 
-def search(r, c, target, nines):
-    # If target is 10, we are currently on a 9. Add it and return from fn.
-    if target == 10:
-        nines.add((r, c))
-        return
-
-    # Check up, down, left, right
-    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
-    for dr, dc in dirs:
-        nr, nc = r + dr, c + dc
-
-        if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == target:
-            # Continue search from here
-            search(nr, nc, target + 1, nines)
-
-
-part_1 = 0
-for r in range(rows):
-    for c in range(cols):
-        if grid[r][c] == 0:
-            # Create a set to keep track of the nines for this 0
-            nine_set = set()
-
-            # Search for all 9's reachable from this 0
-            # Search
-            search(r, c, 1, nine_set)
-
-            # Add the # of results to part_1
-            part_1 += len(nine_set)
-
-
+# Calculate checksum
+part_1 = sum(disk[i] * i for i in range(len(disk)) if disk[i] != ".")
 print(f"Part 1: {part_1}")
