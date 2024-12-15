@@ -8,7 +8,7 @@ for line in fileinput.input():
 rows, cols = len(grid), len(grid[0])
 
 
-def search(r, c):
+def find_region(r, c):
     curr_plant = grid[r][c]
     perimeter = 0
 
@@ -44,7 +44,7 @@ def search(r, c):
                 queue.append((nr, nc))
 
     # len region is the area
-    return region, len(region) * perimeter
+    return region, perimeter
 
 
 part_1 = 0
@@ -54,10 +54,62 @@ for r in range(rows):
     for c in range(cols):
         if (r, c) not in visited:
             # Search for the region starting from (r, c)
-            region, price = search(r, c)
-            print(price)
-            print("\n")
-            part_1 += price
+            region, perimeter = find_region(r, c)
+            part_1 += len(region) * perimeter
             visited.update(region)
 
 print(f"Part 1: {part_1}")
+
+
+# Ripped from HyperNeutrino
+# https://www.youtube.com/watch?v=KXwKGWSQvS0
+def find_sides(region):
+    corner_candidates = set()
+    for r, c in region:
+        for cr, cc in [
+            (r - 0.5, c - 0.5),
+            (r + 0.5, c - 0.5),
+            (r + 0.5, c + 0.5),
+            (r - 0.5, c + 0.5),
+        ]:
+            corner_candidates.add((cr, cc))
+    corners = 0
+    for cr, cc in corner_candidates:
+        config = [
+            (sr, sc) in region
+            for sr, sc in [
+                (cr - 0.5, cc - 0.5),
+                (cr + 0.5, cc - 0.5),
+                (cr + 0.5, cc + 0.5),
+                (cr - 0.5, cc + 0.5),
+            ]
+        ]
+        number = sum(config)
+        if number == 1:
+            corners += 1
+        elif number == 2:
+            if config == [True, False, True, False] or config == [
+                False,
+                True,
+                False,
+                True,
+            ]:
+                corners += 2
+        elif number == 3:
+            corners += 1
+    return corners
+
+
+part_2 = 0
+visited = set()
+
+for r in range(rows):
+    for c in range(cols):
+        if (r, c) not in visited:
+            # Search for the region starting from (r, c)
+            region, perimeter = find_region(r, c)
+            sides = find_sides(region)
+            part_2 += sides * len(region)
+            visited.update(region)
+
+print(f"Part 2: {part_2}")
