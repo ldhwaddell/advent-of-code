@@ -1,5 +1,6 @@
 import fileinput
 
+
 for line in fileinput.input():
     nums = list(map(int, [n for n in line.strip()]))
     break
@@ -7,24 +8,30 @@ for line in fileinput.input():
 # Generate dot map.
 disk = []
 curr_id = 0
-for i in range(len(nums)):
+
+
+for i, n in enumerate(nums):
     if i % 2 == 0:
-        disk.extend([curr_id] * nums[i])
+        disk.extend([curr_id] * n)
         curr_id += 1
     else:
-        disk.extend(["."] * nums[i])
+        disk.extend(["."] * n)
 
-# Execute the swap
-l, r = 0, len(disk) - 1
 
-while l != r:
-    if disk[l] != ".":
-        l += 1
-    elif disk[r] == ".":
-        r -= 1
-    else:
-        disk[l], disk[r] = disk[r], disk[l]
+# Iterate over the index of each blank space, swap with right most number.
 
-# Calculate checksum
-part_1 = sum(disk[i] * i for i in range(len(disk)) if disk[i] != ".")
+space = [i for i, n in enumerate(disk) if disk[i] == "."]
+
+for spot in space:
+    # If right most spot is period, remove it
+    while disk[-1] == ".":
+        disk.pop()
+
+    # If we have used up all our disk:
+    if spot >= len(disk):
+        break
+    # Otherwise, swap current blank with end most
+    disk[spot] = disk.pop()
+
+part_1 = sum([n * i for n, i in enumerate(disk)])
 print(f"Part 1: {part_1}")
